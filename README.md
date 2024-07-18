@@ -2,9 +2,9 @@
 COMP231 Group 6
 
 ## Prerequisites
-
 - .NET 8 SDK
 - Visual Studio 2019 or higher or any other preferred IDE that can run a .NET Project
+- Setup the SQL Database (please refer to **Connecting to the database section** on how to setup)
 
 ## Steps to Run the Project
 1. Clone the repository to your local machine.
@@ -17,3 +17,15 @@ The API should be running on your local machine showing the registered endpoints
 ## Testing the API
 
 You can test the API endpoints using any API client like Postman, Thunder client, Fiddler or directly from the Swagger.
+
+
+# Connecting to the database
+
+## Prerequisites
+- SQL Server 2016 or higher (2022 is recommended)
+- SQL Server Management Studio
+
+## Steps to setup the v-wallet-db
+1. Open SQL Server Management Studio
+2. Execute _v-wallet-schema-sqldb_ script
+3. Execute _v-wallet-data-sqldb_ script
