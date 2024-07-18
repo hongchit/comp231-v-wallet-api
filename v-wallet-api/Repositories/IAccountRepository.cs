@@ -4,6 +4,6 @@ namespace v_wallet_api.Repositories
 {
     public interface IAccountRepository
     {
-        Task<Account> GetUser(string email, string password);
+        Task<Account?> GetUser(string email, string password);
     }
 }

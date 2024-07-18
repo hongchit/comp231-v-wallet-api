@@ -4,14 +4,21 @@ using v_wallet_api.Models;
 
 namespace v_wallet_api.Repositories
 {
-    public class AccountRepository(DataContext context) : IAccountRepository
+    public class AccountRepository : IAccountRepository
     {
-        public async Task<Account> GetUser(string email, string password)
+        private readonly DataContext _context;
+
+        public AccountRepository(DataContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<Account?> GetUser(string email, string password)
         {
             var account =
-                await context.Account.FirstOrDefaultAsync(x => x.Email == email && x.Password == password);
+                await _context.Account.FirstOrDefaultAsync(x => x.Email == email && x.Password == password);
 
-            return account!;
+            return account;
         }
     }
 }

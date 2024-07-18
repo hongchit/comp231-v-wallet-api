@@ -4,9 +4,14 @@ using v_wallet_api.ViewModels;
 
 namespace v_wallet_api.Services
 {
-    public class AccountService(AccountRepository accountRepository) : IAccountService
+    public class AccountService : IAccountService
     {
-        private readonly AccountRepository _accountRepository = accountRepository;
+        private readonly IAccountRepository _accountRepository;
+
+        public AccountService(IAccountRepository accountRepository)
+        {
+            _accountRepository = accountRepository;
+        }
 
         public async Task Login(LoginViewModel loginViewModel)
         {
