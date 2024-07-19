@@ -22,5 +22,7 @@ namespace v_wallet_api.Services
                 throw new AuthenticationException("Invalid email or password");
             }
         }
+
+        // Logout user
     }
 }

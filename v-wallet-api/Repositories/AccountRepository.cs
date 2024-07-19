@@ -13,10 +13,26 @@ namespace v_wallet_api.Repositories
             _context = context;
         }
 
+        public async Task<Account?> GetUser(string email)
+        {
+            var account =
+                await _context.Account.FirstOrDefaultAsync(x => x.Email == email);
+
+            return account;
+        }
+
         public async Task<Account?> GetUser(string email, string password)
         {
             var account =
                 await _context.Account.FirstOrDefaultAsync(x => x.Email == email && x.Password == password);
+
+            return account;
+        }
+
+        public async Task<Account?> CreateAccount(Account account)
+        {
+            await _context.Account.AddAsync(account);
+            await _context.SaveChangesAsync();
 
             return account;
         }
