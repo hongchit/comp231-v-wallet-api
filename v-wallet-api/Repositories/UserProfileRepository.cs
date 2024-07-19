@@ -1,4 +1,5 @@
-﻿using v_wallet_api.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using v_wallet_api.Data;
 using v_wallet_api.Models;
 
 namespace v_wallet_api.Repositories
@@ -11,15 +12,22 @@ namespace v_wallet_api.Repositories
             _context = context;
         }
 
-        public async Task<UserProfile?> GetUserProfile(Guid accountId) {
-            // TODO
-            return null;
-//            var userProfile = await _context.UserProfile.FirstOrDefaultAsync(x => x.AccountId == accountId);
+        public async Task<UserProfile?> GetUserProfile(Guid userProfileId)
+        {
+            var userProfile = await _context.UserProfile.FirstOrDefaultAsync(x => x.Id == userProfileId);
 
-//            return userProfile;
+            return userProfile;
         }
 
-        public async Task<UserProfile?> CreateUserProfile(UserProfile userProfile) {
+        public async Task<UserProfile?> GetUserProfileByAccountID(Guid accountId) 
+        {
+            var userProfile = await _context.UserProfile.FirstOrDefaultAsync(x => x.UserAccountId == accountId);
+
+            return userProfile;
+        }
+
+        public async Task<UserProfile?> CreateUserProfile(UserProfile userProfile) 
+        {
             await _context.UserProfile.AddAsync(userProfile);
             await _context.SaveChangesAsync();
 

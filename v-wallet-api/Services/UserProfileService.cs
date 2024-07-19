@@ -46,10 +46,10 @@ namespace v_wallet_api.Services
 
             var userProfile = new UserProfile
             {
-                AccountId = createdAccount.Id,
+                UserAccountId = createdAccount.Id,
                 Firstname = userProfileViewModel.Firstname,
                 Lastname = userProfileViewModel.Lastname,
-                Birthday = userProfileViewModel.Birthday,
+                Birthdate = userProfileViewModel.Birthday,
             };
             var profile = await _userProfileRepository.CreateUserProfile(userProfile);
             return profile;

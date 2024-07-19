@@ -4,7 +4,8 @@ namespace v_wallet_api.Repositories
 {
     public interface IUserProfileRepository
     {
-        Task<UserProfile?> GetUserProfile(Guid accountId);
+        Task<UserProfile?> GetUserProfile(Guid userProfileId);
+        Task<UserProfile?> GetUserProfileByAccountID(Guid accountId);
         Task<UserProfile?> CreateUserProfile(UserProfile userProfile);
     }
 }

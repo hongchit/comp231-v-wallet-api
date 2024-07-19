@@ -16,7 +16,8 @@ namespace v_wallet_api.ViewModels
         [Required]
         public required string Lastname { get; set; }
 
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateOnly? Birthday { get; set; }
-
     }
 }

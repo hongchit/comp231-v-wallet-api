@@ -22,6 +22,8 @@ namespace v_wallet_api.Data
                 .Property(userAccount => userAccount.AccountType)
                 .HasConversion(new EnumToStringConverter<AccountType>());
 
+            modelBuilder.Entity<UserProfile>()
+                .ToTable("tbl_UserProfile");
         }
     }
 }

@@ -11,9 +11,12 @@ namespace v_wallet_api.Controllers
     {
         private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService)
+        private readonly IUserProfileService _userProfileService;
+
+        public AccountController(IAccountService accountService, IUserProfileService userProfileService)
         {
             _accountService = accountService;
+            _userProfileService = userProfileService;
         }
 
         [HttpPost("login")]
@@ -37,5 +40,42 @@ namespace v_wallet_api.Controllers
             // TODO: Session management (remove session token)
             return Ok();
         }
+
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register([FromBody] UserProfileViewModel userProfileViewModel)
+        {
+            //{
+            //    "email": "example@example.com",
+            //  "password": "password123",
+            //  "confirmPassword": "password123",
+            //  "firstname": "John",
+            //  "lastname": "Doe",
+            //  "birthday": "2000-01-01"
+            //}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid user profile");
+            }
+
+            try
+            {
+                var userProfile = await _userProfileService.Register(userProfileViewModel);
+
+                if (userProfile == null)
+                {
+                    return BadRequest("Invalid user profile");
+                }
+
+                return Ok(userProfile);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                Console.WriteLine(ex.StackTrace);
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
