@@ -18,6 +18,7 @@ namespace v_wallet_api.ViewModels
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateOnly? Birthday { get; set; }
+        [RegularExpression(@"\d{4}-\d{2}-\d{2}", ErrorMessage = "Invalid date format. Please use yyyy-MM-dd.")]
+        public string? Birthdate { get; set; }
     }
 }

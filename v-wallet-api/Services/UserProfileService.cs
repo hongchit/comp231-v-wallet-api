@@ -1,6 +1,7 @@
 ﻿using v_wallet_api.Repositories;
 using v_wallet_api.ViewModels;
 using v_wallet_api.Models;
+using System.Globalization;
 
 namespace v_wallet_api.Services
 {
@@ -32,6 +33,23 @@ namespace v_wallet_api.Services
                 throw new Exception("Password and confirm password do not match");
             }
 
+            // Convert the string from userProfileViewModel.Birthdate to DateOnly format
+            DateOnly birthdate;
+
+            
+            if (!DateOnly.TryParseExact(userProfileViewModel.Birthdate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthdate))
+            {
+                throw new Exception("Invalid date format for Birthdate");
+            }
+
+            // Validate the value
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            if (birthdate > today)
+            {
+                throw new Exception("Invalid date for Birthdate");
+            }
+
+
             account = new Account
             {
                 Email = userProfileViewModel.Email,
@@ -49,7 +67,7 @@ namespace v_wallet_api.Services
                 UserAccountId = createdAccount.Id,
                 Firstname = userProfileViewModel.Firstname,
                 Lastname = userProfileViewModel.Lastname,
-                Birthdate = userProfileViewModel.Birthday,
+                Birthdate = birthdate,
             };
             var profile = await _userProfileRepository.CreateUserProfile(userProfile);
             return profile;
