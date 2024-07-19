@@ -29,5 +29,13 @@ namespace v_wallet_api.Controllers
 
             return Ok();
         }
+
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            // Logout user
+            // TODO: Session management (remove session token)
+            return Ok();
+        }
     }
 }
