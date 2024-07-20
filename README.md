@@ -29,3 +29,8 @@ You can test the API endpoints using any API client like Postman, Thunder client
 1. Open SQL Server Management Studio
 2. Execute _v-wallet-schema-sqldb_ script
 3. Execute _v-wallet-data-sqldb_ script
+
+
+# REST API
+## Swagger Documentation
+Manually generated [Swagger Documentation](https://editor.swagger.io/?url=https://raw.githubusercontent.com/hongchit/comp231-v-wallet-api/main/swagger.json)
