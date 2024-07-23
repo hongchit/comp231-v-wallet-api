@@ -30,8 +30,18 @@ namespace v_wallet_api
                 options.UseSqlServer(builder.Configuration.GetConnectionString("v-wallet-sql"));
             });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAnyOrigin", x =>
+                {
+                    x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
+
 
             var app = builder.Build();
+
+            app.UseCors("AllowAnyOrigin");
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
