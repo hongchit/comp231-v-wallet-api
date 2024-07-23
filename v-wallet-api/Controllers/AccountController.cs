@@ -28,9 +28,13 @@ namespace v_wallet_api.Controllers
                 return BadRequest("Invalid username or password");
             }
 
-            await _accountService.Login(loginViewModel);
+            var token = await _accountService.Login(loginViewModel);
 
-            return Ok();
+            return Ok(new
+            {
+                token
+
+            });
         }
 
         [HttpGet("logout")]

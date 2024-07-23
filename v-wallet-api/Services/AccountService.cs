@@ -1,4 +1,5 @@
 ﻿using System.Security.Authentication;
+using v_wallet_api.Providers;
 using v_wallet_api.Repositories;
 using v_wallet_api.ViewModels;
 
@@ -13,14 +14,26 @@ namespace v_wallet_api.Services
             _accountRepository = accountRepository;
         }
 
-        public async Task Login(LoginViewModel loginViewModel)
+        public async Task<string> Login(LoginViewModel loginViewModel)
         {
             var userAccount = await _accountRepository.GetUser(loginViewModel.Email, loginViewModel.Password);
 
-            if(userAccount == null)
+            if (userAccount == null)
             {
                 throw new AuthenticationException("Invalid email or password");
             }
+
+            var authenticationModel = new AuthenticateViewModel
+            {
+                PrimaryId = userAccount.Id.ToString(),
+                Username = userAccount.Email,
+                Name = userAccount.Email,
+                Role = userAccount.AccountType.ToString()
+            };
+
+            var token = GlobalIntegrationJwtManager.GenerateToken(authenticationModel);
+
+            return token;
         }
 
         // Logout user
