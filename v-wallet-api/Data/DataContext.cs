@@ -12,6 +12,7 @@ namespace v_wallet_api.Data
         }
 
         public DbSet<Account> Account { get; set; }
+        public DbSet<FinancialAccount> FinancialAccount { get; set; }
         public DbSet<FinancialTransaction> FinancialTransaction { get; set; }
         public DbSet<Category> Category { get; set; }
 

@@ -47,11 +47,9 @@ namespace v_wallet_api.Services
             return transactionViewModel;
         }
 
-        public async Task<List<FinancialTransactionViewModel>> GetTransactionsByAccountId(string accountId)
+        public async Task<List<FinancialTransactionViewModel>> GetTransactionsByFinancialAccountId(string accountId)
         {
             var transactions = await _financialAccountRepository.GetFinancialTransactions(Guid.Parse(accountId));
-
-            var sevenDayTransactions = transactions.Where(x => x.TransactionDate >= DateTime.Now.AddDays(-7)).ToList();
 
             var userProfile = await _userProfileService.GetUserProfileByAccountId(accountId);
 
@@ -59,7 +57,7 @@ namespace v_wallet_api.Services
 
             var transactionViewModels = new List<FinancialTransactionViewModel>();
 
-            foreach (var transaction in sevenDayTransactions)
+            foreach (var transaction in transactions)
             {
                 var category = categories.FirstOrDefault(x => x.Id.Equals(transaction.CategoryId));
 
@@ -81,6 +79,39 @@ namespace v_wallet_api.Services
             }
 
             return transactionViewModels;
+        }
+
+        public async Task<List<FinancialTransactionViewModel>> GetTransactionsByUserId(string userId)
+        {
+            var transactions = await _financialAccountRepository.GetFinancialTransactions(Guid.Parse(userId));
+
+            var sevenDaysTransactions = transactions.Where(x => x.TransactionDate >= DateTime.Now.AddDays(-7)).ToList();
+
+            var userProfile = await _userProfileService.GetUserProfileByAccountId(userId);
+            var categories = (await _categoryService.GetCategories());
+
+            var transactionResults = new List<FinancialTransactionViewModel>();
+
+            foreach (var transaction in sevenDaysTransactions)
+            {
+                var transactionViewModel = new FinancialTransactionViewModel
+                {
+                    id = transaction.Id,
+                    Amount = transaction.Amount,
+                    Description = transaction.Description,
+                    TransactionType = transaction.TransactionType,
+                    TransactionInformation = Enum.GetName(typeof(TransactionType), transaction.TransactionType),
+                    TransactionDate = transaction.TransactionDate,
+                    AccountId = transaction.AccountId,
+                    AccountName = userProfile.FullName,
+                    CategoryId = transaction.CategoryId,
+                    CategoryName = categories.FirstOrDefault(x => x.Id.Equals(transaction.CategoryId)).Name
+                };
+
+                transactionResults.Add(transactionViewModel);
+            }
+
+            return transactionResults;
         }
     }
 }

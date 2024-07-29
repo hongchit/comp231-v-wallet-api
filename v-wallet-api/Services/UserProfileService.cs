@@ -16,6 +16,21 @@ namespace v_wallet_api.Services
             _userProfileRepository = userProfileRepository;
         }
 
+        public async Task<UserProfileViewModel> GetUserProfile(string userProfileId)
+        {
+            var user = await _userProfileRepository.GetUserProfile(Guid.Parse(userProfileId));
+
+            var userProfile = new UserProfileViewModel
+            {
+                Id = user.Id.ToString(),
+                Firstname = user.Firstname,
+                Lastname = user.Lastname,
+                Birthdate = user.Birthdate
+            };
+
+            return userProfile;
+        }
+
         public async Task<UserProfile?> Register(UserProfileViewModel userProfileViewModel)
         {
             var account = await _accountRepository.GetUser(userProfileViewModel.Email);

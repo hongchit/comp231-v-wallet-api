@@ -5,6 +5,7 @@ namespace v_wallet_api.Services
     public interface IFinancialAccountService
     {
         Task<FinancialTransactionViewModel?> GetTransactionByTransactionId(string transactionId);
-        Task<List<FinancialTransactionViewModel>> GetTransactionsByAccountId(string accountId);
+        Task<List<FinancialTransactionViewModel>> GetTransactionsByFinancialAccountId(string accountId);
+        Task<List<FinancialTransactionViewModel>> GetTransactionsByUserId(string userId);
     }
 }

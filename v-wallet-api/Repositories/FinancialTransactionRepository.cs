@@ -13,6 +13,13 @@ namespace v_wallet_api.Repositories
             _context = context;
         }
 
+        public async Task<List<FinancialAccount>> GetFinancialAccountsByUserId(string userId)
+        {
+            var accounts = _context.FinancialAccount.Where(x => x.UserProfileId == Guid.Parse(userId)).ToList();
+
+            return accounts;
+        }
+
         public async Task<FinancialTransaction?> GetFinancialTransaction(Guid id)
         {
             var transaction = await _context.FinancialTransaction.FirstOrDefaultAsync(x => x.Id == id);
