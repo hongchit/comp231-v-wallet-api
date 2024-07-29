@@ -38,7 +38,6 @@ namespace v_wallet_api
                 });
             });
 
-
             var app = builder.Build();
 
             app.UseCors("AllowAnyOrigin");
