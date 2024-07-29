@@ -33,18 +33,9 @@ namespace v_wallet_api.Services
                 throw new Exception("Password and confirm password do not match");
             }
 
-            // Convert the string from userProfileViewModel.Birthdate to DateOnly format
-            DateOnly birthdate;
-
-            
-            if (!DateOnly.TryParseExact(userProfileViewModel.Birthdate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthdate))
-            {
-                throw new Exception("Invalid date format for Birthdate");
-            }
-
             // Validate the value
             var today = DateOnly.FromDateTime(DateTime.Today);
-            if (birthdate > today)
+            if (userProfileViewModel.Birthdate > today)
             {
                 throw new Exception("Invalid date for Birthdate");
             }
@@ -67,10 +58,25 @@ namespace v_wallet_api.Services
                 UserAccountId = createdAccount.Id,
                 Firstname = userProfileViewModel.Firstname,
                 Lastname = userProfileViewModel.Lastname,
-                Birthdate = birthdate,
+                Birthdate = userProfileViewModel.Birthdate,
             };
             var profile = await _userProfileRepository.CreateUserProfile(userProfile);
             return profile;
+        }
+
+        public async Task<UserProfileViewModel?> GetUserProfileByAccountId(string accountId)
+        {
+            var userProfile = await _userProfileRepository.GetUserProfileByAccountID(Guid.Parse(accountId));
+
+            var userProfileViewModel = new UserProfileViewModel
+            {
+                Id = userProfile.Id.ToString(),
+                Firstname = userProfile.Firstname,
+                Lastname = userProfile.Lastname,
+                Birthdate = userProfile.Birthdate
+            };
+
+            return userProfileViewModel;
         }
     }
 }

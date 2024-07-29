@@ -13,6 +13,12 @@ namespace v_wallet_api.Repositories
             _context = context;
         }
 
+        public async Task<Account?> GetAccountById(string accountId)
+        {
+            var account = await _context.Account.FirstOrDefaultAsync(x => x.Id == Guid.Parse(accountId));
+            return account;
+        }
+
         public async Task<Account?> GetUser(string email)
         {
             var account =

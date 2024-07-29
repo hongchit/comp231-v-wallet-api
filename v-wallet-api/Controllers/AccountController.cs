@@ -57,9 +57,14 @@ namespace v_wallet_api.Controllers
             //  "lastname": "Doe",
             //  "birthday": "2000-01-01"
             //}
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(userProfileViewModel.Email) || string.IsNullOrEmpty(userProfileViewModel.Password))
             {
-                return BadRequest("Invalid user profile");
+                return BadRequest("Email or password is invalid");
+            }
+
+            if (userProfileViewModel.Password != userProfileViewModel.ConfirmPassword)
+            {
+                return BadRequest("Password did not match");
             }
 
             try

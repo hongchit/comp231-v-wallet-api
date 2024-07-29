@@ -36,6 +36,20 @@ namespace v_wallet_api.Services
             return token;
         }
 
+        public async Task<AccountViewModel> GetAccountById(string accountId)
+        {
+            var account = await _accountRepository.GetAccountById(accountId);
+
+            var accountViewModel = new AccountViewModel
+            {
+                Id = account.Id,
+                Email = account.Email,
+                Password = account.Password
+            };
+
+            return accountViewModel;
+        }
+
         // Logout user
     }
 }

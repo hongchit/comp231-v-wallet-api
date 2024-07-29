@@ -5,5 +5,6 @@ namespace v_wallet_api.Services
     public interface IAccountService
     {
         Task<string> Login(LoginViewModel loginViewModel);
+        Task<AccountViewModel> GetAccountById(string accountId);
     }
 }
