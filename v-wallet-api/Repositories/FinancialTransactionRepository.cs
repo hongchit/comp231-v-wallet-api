@@ -33,5 +33,14 @@ namespace v_wallet_api.Repositories
 
             return await Task.FromResult(transactions);
         }
+
+        public async Task<FinancialTransaction> CreateFinancialTransaction(FinancialTransaction transaction)
+        {
+            await _context.FinancialTransaction.AddAsync(transaction);
+
+            await _context.SaveChangesAsync();
+
+            return transaction;
+        }
     }
 }

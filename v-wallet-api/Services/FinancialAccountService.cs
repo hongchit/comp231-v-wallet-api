@@ -10,7 +10,8 @@ namespace v_wallet_api.Services
         private readonly IUserProfileService _userProfileService;
         private readonly ICategoryService _categoryService;
 
-        public FinancialAccountService(IFinancialAccountRepository financialAccountRepository, IUserProfileService userProfileService, ICategoryService categoryService)
+        public FinancialAccountService(IFinancialAccountRepository financialAccountRepository,
+            IUserProfileService userProfileService, ICategoryService categoryService)
         {
             _financialAccountRepository = financialAccountRepository;
             _userProfileService = userProfileService;
@@ -21,14 +22,15 @@ namespace v_wallet_api.Services
         {
             var transaction = await _financialAccountRepository.GetFinancialTransaction(Guid.Parse(transactionId));
 
-            if(transaction == null)
+            if (transaction == null)
             {
                 return null;
             }
 
             var userProfile = await _userProfileService.GetUserProfileByAccountId(transaction.AccountId.ToString());
             var category =
-                (await _categoryService.GetCategories()).FirstOrDefault(x => x.Id.Equals(transaction.CategoryId.ToString()));
+                (await _categoryService.GetCategories()).FirstOrDefault(x =>
+                    x.Id.Equals(transaction.CategoryId.ToString()));
 
             var transactionViewModel = new FinancialTransactionViewModel
             {
@@ -112,6 +114,23 @@ namespace v_wallet_api.Services
             }
 
             return transactionResults;
+        }
+
+        public async Task<string> CreateTransaction(FinancialTransactionViewModel transaction)
+        {
+            var newTransaction = new FinancialTransaction
+            {
+                Amount = transaction.Amount,
+                Description = transaction.Description,
+                TransactionType = Enum.Parse<TransactionType>(transaction.TransactionInformation),
+                TransactionDate = transaction.TransactionDate,
+                AccountId = transaction.AccountId,
+                CategoryId = transaction.CategoryId
+            };
+
+            var createdTransaction = await _financialAccountRepository.CreateFinancialTransaction(newTransaction);
+
+            return createdTransaction.Id.ToString();
         }
     }
 }

@@ -41,5 +41,18 @@ namespace v_wallet_api.Controllers
 
             return Ok(transactions);
         }
+
+        [HttpPost("transaction")]
+        public async Task<IActionResult> CreateTransaction([FromBody] FinancialTransactionViewModel transaction)
+        {
+            if (string.IsNullOrEmpty(transaction.AccountId.ToString()))
+            {
+                return BadRequest("Failed to create transaction");
+            }
+
+            var createdTransaction = await _financeService.CreateTransaction(transaction);
+
+            return Ok(createdTransaction);
+        }
     }
 }
