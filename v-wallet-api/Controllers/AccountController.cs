@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Authentication;
 using v_wallet_api.Services;
 using v_wallet_api.ViewModels;
 
@@ -25,16 +26,21 @@ namespace v_wallet_api.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Invalid username or password");
+                return Unauthorized("Invalid username or password");
             }
 
-            var token = await _accountService.Login(loginViewModel);
-
-            return Ok(new
+            try
             {
-                token
+                var token = await _accountService.Login(loginViewModel);
 
-            });
+                return Ok(new
+                {
+                    token
+
+                });
+            } catch (AuthenticationException ex) {
+                return Unauthorized("Invalid username or password");
+            }
         }
 
         [HttpGet("logout")]
