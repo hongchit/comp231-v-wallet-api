@@ -37,5 +37,44 @@ namespace v_wallet_api.Repositories
 
             return account;
         }
+
+        public async Task<bool> UpdateFinancialAccount(FinancialAccount financialAccount)
+        {
+            var account = await _context.FinancialAccount.FirstOrDefaultAsync(x => x.Id == financialAccount.Id);
+
+            if (account != null)
+            {
+                // Id, UserProfileId cannot be updated
+                account.AccountName = financialAccount.AccountName;
+                account.AccountNumber = financialAccount.AccountNumber;
+                account.InitialValue = financialAccount.InitialValue;
+                account.CurrentValue = financialAccount.CurrentValue;
+                account.AccountType = financialAccount.AccountType;
+                account.Currency = financialAccount.Currency;
+
+                _context.FinancialAccount.Update(account);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false; // Account not found
+        }
+
+        public async Task<bool> DeleteFinancialAccount(Guid id)
+        {
+            var account = await _context.FinancialAccount.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (account != null)
+            {
+                _context.FinancialAccount.Remove(account);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false; // Account not found
+
+        }
     }
 }

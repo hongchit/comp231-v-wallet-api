@@ -1,5 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 using v_wallet_api.Data;
 using v_wallet_api.Repositories;
 using v_wallet_api.Services;
@@ -24,7 +26,12 @@ namespace v_wallet_api
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IFinancialAccountRepository, FinancialAccountRepository>();
+            builder.Services.AddScoped<IFinancialAccountService, FinancialAccountService>();
+            builder.Services.AddScoped<IFinancialTransactionRepository, FinancialTransactionRepository>();
+            builder.Services.AddScoped<IFinancialTransactionService, FinancialTransactionService>();
 
             builder.Services.AddDbContext<DataContext>(options =>
             {
@@ -38,6 +45,19 @@ namespace v_wallet_api
                     x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                 });
             });
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "V-Wallet API",
+                    Version = "v1",
+                    Description = "RESTFul Application for COMP231 Group 6",
+                });
+                c.EnableAnnotations();
+
+            });
+
 
             var app = builder.Build();
 
