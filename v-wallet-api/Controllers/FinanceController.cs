@@ -9,9 +9,9 @@ namespace v_wallet_api.Controllers
     [ApiController]
     public class FinanceController : ControllerBase
     {
-        private readonly IFinancialAccountService _financeService;
+        private readonly IFinancialTransactionService _financeService;
 
-        public FinanceController(IFinancialAccountService financeService)
+        public FinanceController(IFinancialTransactionService financeService)
         {
             _financeService = financeService;
         }

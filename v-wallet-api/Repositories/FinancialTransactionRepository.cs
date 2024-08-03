@@ -4,7 +4,7 @@ using v_wallet_api.Models;
 
 namespace v_wallet_api.Repositories
 {
-    public class FinancialTransactionRepository : IFinancialAccountRepository
+    public class FinancialTransactionRepository : IFinancialTransactionRepository
     {
         private readonly DataContext _context;
 
@@ -13,12 +13,6 @@ namespace v_wallet_api.Repositories
             _context = context;
         }
 
-        public async Task<List<FinancialAccount>> GetFinancialAccountsByUserId(string userId)
-        {
-            var accounts = _context.FinancialAccount.Where(x => x.UserProfileId == Guid.Parse(userId)).ToList();
-
-            return accounts;
-        }
 
         public async Task<FinancialTransaction?> GetFinancialTransaction(Guid id)
         {

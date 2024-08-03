@@ -27,6 +27,17 @@ namespace v_wallet_api.Data
 
             modelBuilder.Entity<UserProfile>()
                 .ToTable("tbl_UserProfile");
+
+            modelBuilder.Entity<FinancialAccount>()
+                .ToTable("tbl_FinancialAccounte")
+                .Property(financialAccount => financialAccount.AccountType)
+                .HasConversion(new EnumToStringConverter<FinancialAccountType>());
+
+            modelBuilder.Entity<FinancialTransaction>()
+                .ToTable("tbl_FinancialTransaction");
+
+            modelBuilder.Entity<Category>()
+                .ToTable("tbl_Category");
         }
     }
 }

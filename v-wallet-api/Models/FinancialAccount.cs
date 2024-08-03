@@ -7,7 +7,7 @@
         public string AccountNumber { get; set; }
         public decimal InitialValue { get; set; }
         public decimal CurrentValue { get; set; }
-        public Guid AccountTypeId { get; set; }
+        public FinancialAccountType AccountType { get; set; }
         public Guid CurrencyId { get; set; }
         public Guid UserProfileId { get; set; }
     }

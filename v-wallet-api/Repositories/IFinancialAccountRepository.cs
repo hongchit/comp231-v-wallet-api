@@ -4,9 +4,8 @@ namespace v_wallet_api.Repositories
 {
     public interface IFinancialAccountRepository
     {
-        Task<List<FinancialAccount>> GetFinancialAccountsByUserId(string userId);
-        Task<FinancialTransaction?> GetFinancialTransaction(Guid id);
-        Task<List<FinancialTransaction>> GetFinancialTransactions(Guid accountId);
-        Task<FinancialTransaction> CreateFinancialTransaction(FinancialTransaction transaction);
+        Task<List<FinancialAccount>> GetFinancialAccountsByUserId(Guid userId);
+        Task<FinancialAccount?> GetFinancialAccount(Guid id);
+        Task<FinancialAccount> CreateFinancialAccount(FinancialAccount financialAccount);
     }
 }
