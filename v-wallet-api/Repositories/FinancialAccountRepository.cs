@@ -17,7 +17,7 @@ namespace v_wallet_api.Repositories
 
         public async Task<List<FinancialAccount>> GetFinancialAccountsByUserId(Guid userId)
         {
-            var accounts = _context.FinancialAccount.Where(x => x.UserProfileId == userId).ToList();
+            var accounts = _context.FinancialAccount.Where(x => x.UserAccountId == userId).ToList();
 
             return accounts;
         }
@@ -44,7 +44,7 @@ namespace v_wallet_api.Repositories
 
             if (account != null)
             {
-                // Id, UserProfileId cannot be updated
+                // Id, UserAccountId cannot be updated
                 account.AccountName = financialAccount.AccountName;
                 account.AccountNumber = financialAccount.AccountNumber;
                 account.InitialValue = financialAccount.InitialValue;

@@ -29,6 +29,6 @@ namespace v_wallet_api.ViewModels
         public string Currency { get; set; }
 
         [Required]
-        public Guid UserProfileId { get; set; }
+        public Guid UserAccountId { get; set; }
     }
 }

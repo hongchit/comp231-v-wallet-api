@@ -267,7 +267,7 @@
           "accountType",
           "currency",
           "currentValue",
-          "userProfileId"
+          "userAccountId"
         ],
         "type": "object",
         "properties": {
@@ -303,7 +303,7 @@
             "minLength": 1,
             "type": "string"
           },
-          "userProfileId": {
+          "userAccountId": {
             "type": "string",
             "format": "uuid"
           }
@@ -384,6 +384,7 @@
       },
       "UserProfileViewModel": {
         "required": [
+          "email",
           "firstname",
           "lastname"
         ],
@@ -394,8 +395,8 @@
             "nullable": true
           },
           "email": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "password": {
             "type": "string",

@@ -9,6 +9,6 @@
         public decimal CurrentValue { get; set; }
         public FinancialAccountType AccountType { get; set; }
         public string Currency { get; set; }
-        public Guid UserProfileId { get; set; }
+        public Guid UserAccountId { get; set; }
     }
 }

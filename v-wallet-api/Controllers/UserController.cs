@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Authentication;
 using v_wallet_api.Services;
@@ -63,6 +63,10 @@ namespace v_wallet_api.Controllers
             //  "lastname": "Doe",
             //  "birthday": "2000-01-01"
             //}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid user profile");
+            }
             if (string.IsNullOrEmpty(userProfileViewModel.Email) || string.IsNullOrEmpty(userProfileViewModel.Password))
             {
                 return BadRequest("Email or password is invalid");

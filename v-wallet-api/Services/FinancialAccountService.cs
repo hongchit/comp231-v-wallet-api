@@ -30,7 +30,7 @@ namespace v_wallet_api.Services
                     CurrentValue = account.CurrentValue,
                     AccountType = Enum.GetName<FinancialAccountType>(account.AccountType),
                     Currency = account.Currency,
-                    UserProfileId = account.UserProfileId,
+                    UserAccountId = account.UserAccountId,
                 };
                 accountViewModels.Add(accountViewModel);
             }
@@ -53,7 +53,7 @@ namespace v_wallet_api.Services
                 CurrentValue = account.CurrentValue,
                 AccountType = Enum.GetName<FinancialAccountType>(account.AccountType),
                 Currency = account.Currency,
-                UserProfileId = account.UserProfileId,
+                UserAccountId = account.UserAccountId,
             };
             return accountViewModel;
         }
@@ -69,7 +69,7 @@ namespace v_wallet_api.Services
                 CurrentValue = financialAccount.CurrentValue,
                 AccountType = Enum.Parse<FinancialAccountType>(financialAccount.AccountType),
                 Currency = financialAccount.Currency,
-                UserProfileId = financialAccount.UserProfileId,
+                UserAccountId = financialAccount.UserAccountId,
             };
             var created = await _financialAccountRepository.CreateFinancialAccount(account);
             return created.Id.ToString();
@@ -86,7 +86,7 @@ namespace v_wallet_api.Services
                 CurrentValue = financialAccount.CurrentValue,
                 AccountType = Enum.Parse<FinancialAccountType>(financialAccount.AccountType),
                 Currency = financialAccount.Currency,
-                UserProfileId = financialAccount.UserProfileId,
+                UserAccountId = financialAccount.UserAccountId,
             };
             return await _financialAccountRepository.UpdateFinancialAccount(account);
         }
