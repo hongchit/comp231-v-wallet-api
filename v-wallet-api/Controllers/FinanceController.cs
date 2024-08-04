@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
+﻿using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
+using v_wallet_api.Providers;
 using v_wallet_api.Services;
 using v_wallet_api.ViewModels;
 
 namespace v_wallet_api.Controllers
 {
-    [Route("api/[controller]")]
+    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]
+    [JwtAuthentication]
     public class FinanceController : ControllerBase
     {
         private readonly IFinancialAccountService _financeService;
@@ -16,7 +18,7 @@ namespace v_wallet_api.Controllers
             _financeService = financeService;
         }
 
-        [HttpGet("/{accountId}/transactions")]
+        [Microsoft.AspNetCore.Mvc.HttpGet("/{accountId}/transactions")]
         public async Task<IActionResult> GetFinancialTransactionsByAccount(string accountId)
         {
             if (string.IsNullOrEmpty(accountId))
@@ -29,7 +31,7 @@ namespace v_wallet_api.Controllers
             return Ok(transactions);
         }
 
-        [HttpGet("/{userId}/transactions")]
+        [Microsoft.AspNetCore.Mvc.HttpGet("/{userId}/transactions")]
         public async Task<IActionResult> GetFinancialTransactions(string userId)
         {
             if (string.IsNullOrEmpty(userId))
@@ -42,8 +44,8 @@ namespace v_wallet_api.Controllers
             return Ok(transactions);
         }
 
-        [HttpPost("transaction")]
-        public async Task<IActionResult> CreateTransaction([FromBody] FinancialTransactionViewModel transaction)
+        [Microsoft.AspNetCore.Mvc.HttpPost("transaction")]
+        public async Task<IActionResult> CreateTransaction([Microsoft.AspNetCore.Mvc.FromBody] FinancialTransactionViewModel transaction)
         {
             if (string.IsNullOrEmpty(transaction.AccountId.ToString()))
             {
@@ -53,6 +55,19 @@ namespace v_wallet_api.Controllers
             var createdTransaction = await _financeService.CreateTransaction(transaction);
 
             return Ok(createdTransaction);
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpGet("{userId}/account")]
+        public async Task<IActionResult> GetAccounts([FromUri] string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("Failed to load financial accounts");
+            }
+
+            var financialAccounts = await _financeService.GetFinancialAccountsByUserId(userId);
+
+            return Ok(financialAccounts);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.VisualBasic;
 using v_wallet_api.Models;
 
 namespace v_wallet_api.Data
@@ -13,6 +14,7 @@ namespace v_wallet_api.Data
 
         public DbSet<Account> Account { get; set; }
         public DbSet<FinancialAccount> FinancialAccount { get; set; }
+        public DbSet<FinancialAccountType> FinancialAccountType { get; set; }
         public DbSet<FinancialTransaction> FinancialTransaction { get; set; }
         public DbSet<Category> Category { get; set; }
 
@@ -27,6 +29,16 @@ namespace v_wallet_api.Data
 
             modelBuilder.Entity<UserProfile>()
                 .ToTable("tbl_UserProfile");
+
+            modelBuilder.Entity<FinancialAccount>()
+                .ToTable("tbl_FinancialAccount");
+
+            modelBuilder.Entity<FinancialTransaction>().ToTable("tbl_FinancialTransaction");
+
+            modelBuilder.Entity<FinancialAccountType>().ToTable("tbl_FinancialAccountType");
+
+            modelBuilder.Entity<Category>().ToTable("tbl_Category");
+
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Security.Authentication;
-using v_wallet_api.Providers;
+﻿using v_wallet_api.Providers;
 using v_wallet_api.Repositories;
 using v_wallet_api.ViewModels;
 
@@ -8,19 +7,21 @@ namespace v_wallet_api.Services
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly IUserProfileService _userProfileService;
 
-        public AccountService(IAccountRepository accountRepository)
+        public AccountService(IAccountRepository accountRepository, IUserProfileService userProfileService)
         {
             _accountRepository = accountRepository;
+            _userProfileService = userProfileService;
         }
 
-        public async Task<string> Login(LoginViewModel loginViewModel)
+        public async Task<AccountViewModel?> Login(LoginViewModel loginViewModel)
         {
             var userAccount = await _accountRepository.GetUser(loginViewModel.Email, loginViewModel.Password);
 
             if (userAccount == null)
             {
-                throw new AuthenticationException("Invalid email or password");
+                return null;
             }
 
             var authenticationModel = new AuthenticateViewModel
@@ -33,7 +34,18 @@ namespace v_wallet_api.Services
 
             var token = GlobalIntegrationJwtManager.GenerateToken(authenticationModel);
 
-            return token;
+            var userProfile = await _userProfileService.GetUserProfileByAccountId(userAccount.Id.ToString());
+
+            var userData = new AccountViewModel
+            {
+                AccountId = userAccount.Id,
+                ProfileId = userProfile.Id,
+                Email = userAccount.Email,
+                Name = userProfile.FullName,
+                Token = token
+            };
+
+            return userData;
         }
 
         public async Task<AccountViewModel> GetAccountById(string accountId)
@@ -42,7 +54,7 @@ namespace v_wallet_api.Services
 
             var accountViewModel = new AccountViewModel
             {
-                Id = account.Id,
+                AccountId = account.Id,
                 Email = account.Email,
                 Password = account.Password
             };

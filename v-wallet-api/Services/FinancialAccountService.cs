@@ -1,6 +1,8 @@
-﻿using v_wallet_api.Models;
+﻿using System.Diagnostics;
+using v_wallet_api.Models;
 using v_wallet_api.Repositories;
 using v_wallet_api.ViewModels;
+using FinancialAccountType = v_wallet_api.ViewModels.FinancialAccountType;
 
 namespace v_wallet_api.Services
 {
@@ -131,6 +133,37 @@ namespace v_wallet_api.Services
             var createdTransaction = await _financialAccountRepository.CreateFinancialTransaction(newTransaction);
 
             return createdTransaction.Id.ToString();
+        }
+
+        public async Task<List<FinancialAccountViewModel>> GetFinancialAccountsByUserId(string userId)
+        {
+            try
+            {
+                var financialAccounts = await _financialAccountRepository.GetFinancialAccountsByUserId(userId);
+
+                var financialAccountsViewModel = new List<FinancialAccountViewModel>();
+
+                foreach (var financialAccount in financialAccounts)
+                {
+
+                    financialAccountsViewModel.Add(new FinancialAccountViewModel
+                    {
+                        Id = financialAccount.Id.ToString(),
+                        Name = financialAccount.AccountName,
+                        Number = financialAccount.AccountNumber,
+                        Type = Enum.Parse<FinancialAccountType>(financialAccount.AccountType.Name, true),
+                        FinancialAccountType = financialAccount.AccountType.Name,
+                        Balance = financialAccount.CurrentValue
+                    });
+                }
+
+                return financialAccountsViewModel;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
+            }
         }
     }
 }

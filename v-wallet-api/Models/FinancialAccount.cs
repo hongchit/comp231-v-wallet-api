@@ -10,5 +10,7 @@
         public Guid AccountTypeId { get; set; }
         public Guid CurrencyId { get; set; }
         public Guid UserProfileId { get; set; }
+
+        public FinancialAccountType? AccountType { get; set; }
     }
 }

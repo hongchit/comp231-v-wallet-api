@@ -5,8 +5,8 @@ namespace v_wallet_api.ViewModels
     public class LoginViewModel
     {
         [Required]
-        public required string Email { get; set; }
+        public string Email { get; set; }
         [Required]
-        public required string Password { get; set; }
+        public string Password { get; set; }
     }
 }

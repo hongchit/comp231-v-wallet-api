@@ -24,6 +24,10 @@ namespace v_wallet_api
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+            builder.Services.AddScoped<IFinancialAccountRepository, FinancialAccountRepository>();
+            builder.Services.AddScoped<IFinancialAccountService, FinancialAccountService>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
 
             builder.Services.AddDbContext<DataContext>(options =>
             {
