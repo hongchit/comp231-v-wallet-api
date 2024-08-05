@@ -29,7 +29,7 @@ namespace v_wallet_api.Data
                 .ToTable("tbl_UserProfile");
 
             modelBuilder.Entity<FinancialAccount>()
-                .ToTable("tbl_FinancialAccounte")
+                .ToTable("tbl_FinancialAccount")
                 .Property(financialAccount => financialAccount.AccountType)
                 .HasConversion(new EnumToStringConverter<FinancialAccountType>());
 
