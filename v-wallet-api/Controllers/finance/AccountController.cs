@@ -20,10 +20,10 @@ namespace v_wallet_api.Controllers.finance
         }
 
         // Retrieve all accounts belong to the logged-in user
-        [HttpGet]
-        public async Task<IActionResult> GetFinancialAccount()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetFinancialAccount(string id)
         {
-            string userProfileId = ""; // TODO Read from JWT Token Authentication
+            string userProfileId = id; // TODO Read from JWT Token Authentication
             var accounts = await _financialAccountService.GetFinancialAccountsByUserId(userProfileId);
             return Ok(accounts);
         }
@@ -31,7 +31,7 @@ namespace v_wallet_api.Controllers.finance
         [HttpPost]
         public async Task<IActionResult> CreateFinancialAccount([FromBody] FinancialAccountViewModel account)
         {
-            string userProfileId = ""; // TODO Read from JWT Token Authentication
+            //string userProfileId = ""; // TODO Read from JWT Token Authentication
             var created = await _financialAccountService.CreateFinancialAccount(account);
             if (created != null)
             {
@@ -60,6 +60,5 @@ namespace v_wallet_api.Controllers.finance
             var success = await _financialAccountService.DeleteFinancialAccount(id);
             return Ok(success);
         }
-
     }
 }
