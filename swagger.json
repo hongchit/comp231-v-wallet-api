@@ -1,14 +1,192 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "v-wallet-api",
-    "version": "1.0"
+    "title": "V-Wallet API",
+    "description": "RESTFul Application for COMP231 Group 6",
+    "version": "v1"
   },
   "paths": {
-    "/api/Account/login": {
+    "/api/finance/Account": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "post": {
         "tags": [
           "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancialAccountViewModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancialAccountViewModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancialAccountViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/finance/Account/{id}": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancialAccountViewModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancialAccountViewModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancialAccountViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Account"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/finance/Transaction/by_account/{accountId}": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/finance/Transaction/by_user/{userId}": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/finance/Transaction": {
+      "post": {
+        "tags": [
+          "Transaction"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancialTransactionViewModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancialTransactionViewModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancialTransactionViewModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/User/login": {
+      "post": {
+        "tags": [
+          "User"
         ],
         "requestBody": {
           "content": {
@@ -36,10 +214,10 @@
         }
       }
     },
-    "/api/Account/logout": {
+    "/api/User/logout": {
       "get": {
         "tags": [
-          "Account"
+          "User"
         ],
         "responses": {
           "200": {
@@ -48,10 +226,10 @@
         }
       }
     },
-    "/api/Account/register": {
+    "/api/User/register": {
       "post": {
         "tags": [
-          "Account"
+          "User"
         ],
         "requestBody": {
           "content": {
@@ -82,6 +260,101 @@
   },
   "components": {
     "schemas": {
+      "FinancialAccountViewModel": {
+        "required": [
+          "accountName",
+          "accountNumber",
+          "accountType",
+          "currency",
+          "currentValue",
+          "userProfileId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID of the record",
+            "type": "string",
+            "description": "example: e1cb23d0-6cbe-4a29-b586-bfa424bc93fd",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "accountName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "accountNumber": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "initialValue": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "currentValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "accountType": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "currency": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "userProfileId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FinancialTransactionViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "transactionType": {
+            "$ref": "#/components/schemas/TransactionType"
+          },
+          "transactionInformation": {
+            "type": "string",
+            "nullable": true
+          },
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountName": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categoryName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginViewModel": {
         "required": [
           "email",
@@ -100,17 +373,29 @@
         },
         "additionalProperties": false
       },
+      "TransactionType": {
+        "enum": [
+          0,
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
       "UserProfileViewModel": {
         "required": [
-          "email",
           "firstname",
           "lastname"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
           "email": {
-            "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "password": {
             "type": "string",
@@ -129,10 +414,14 @@
             "type": "string"
           },
           "birthdate": {
-            "pattern": "\\d{4}-\\d{2}-\\d{2}",
             "type": "string",
             "format": "date",
             "nullable": true
+          },
+          "fullName": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false
