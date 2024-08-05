@@ -18,7 +18,7 @@ namespace v_wallet_api.Controllers
             _financeService = financeService;
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpGet("/{accountId}/transactions")]
+        [Microsoft.AspNetCore.Mvc.HttpGet("{accountId}/transactions")]
         public async Task<IActionResult> GetFinancialTransactionsByAccount(string accountId)
         {
             if (string.IsNullOrEmpty(accountId))

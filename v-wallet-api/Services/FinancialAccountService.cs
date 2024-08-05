@@ -36,11 +36,11 @@ namespace v_wallet_api.Services
 
             var transactionViewModel = new FinancialTransactionViewModel
             {
-                Id = transaction.Id,
+                Id = transaction.Id.ToString(),
                 Amount = transaction.Amount,
                 Description = transaction.Description,
-                TransactionType = transaction.TransactionType,
-                TransactionInformation = Enum.GetName(typeof(TransactionType), transaction.TransactionType),
+                TransactionType = Enum.Parse<TransactionType>(transaction.TransactionType),
+                TransactionInformation = transaction.TransactionType,
                 TransactionDate = transaction.TransactionDate,
                 AccountId = transaction.AccountId,
                 AccountName = userProfile.FullName,
@@ -68,11 +68,11 @@ namespace v_wallet_api.Services
 
                 var transactionViewModel = new FinancialTransactionViewModel
                 {
-                    Id = transaction.Id,
+                    Id = transaction.Id.ToString(),
                     Amount = transaction.Amount,
                     Description = transaction.Description,
-                    TransactionType = transaction.TransactionType,
-                    TransactionInformation = Enum.GetName(typeof(TransactionType), transaction.TransactionType),
+                    TransactionType = Enum.Parse<TransactionType>(transaction.TransactionType),
+                    TransactionInformation = transaction.TransactionType,
                     TransactionDate = transaction.TransactionDate,
                     AccountId = transaction.AccountId,
                     AccountName = userProfile.FullName,
@@ -105,16 +105,16 @@ namespace v_wallet_api.Services
 
                 var transactionViewModel = new FinancialTransactionViewModel
                 {
-                    Id = transaction.Id,
+                    Id = transaction.Id.ToString(),
                     Amount = transaction.Amount,
                     Description = transaction.Description,
-                    TransactionType = transaction.TransactionType,
-                    TransactionInformation = Enum.GetName(typeof(TransactionType), transaction.TransactionType),
+                    TransactionType = Enum.Parse<TransactionType>(transaction.TransactionType),
+                    TransactionInformation = transaction.TransactionType,
                     TransactionDate = transaction.TransactionDate,
                     AccountId = financialAccount.Id,
                     AccountName = financialAccount.AccountName,
                     CategoryId = transaction.CategoryId,
-                    CategoryName = categories.FirstOrDefault(x => x.Id.Equals(transaction.CategoryId)).Name
+                    CategoryName = categories.FirstOrDefault(x => x.Id.Equals(transaction.CategoryId.ToString())).Name
                 };
 
                 transactionResults.Add(transactionViewModel);
@@ -125,14 +125,18 @@ namespace v_wallet_api.Services
 
         public async Task<string> CreateTransaction(FinancialTransactionViewModel transaction)
         {
+            var categories = await _categoryService.GetCategories();
+
+            var selectedCategory = categories.FirstOrDefault(x => x.Name == transaction.CategoryName);
+
             var newTransaction = new FinancialTransaction
             {
                 Amount = transaction.Amount,
                 Description = transaction.Description,
-                TransactionType = Enum.Parse<TransactionType>(transaction.TransactionInformation),
+                TransactionType = transaction.TransactionInformation,
                 TransactionDate = transaction.TransactionDate,
                 AccountId = transaction.AccountId,
-                CategoryId = transaction.CategoryId
+                CategoryId = Guid.Parse(selectedCategory.Id)
             };
 
             var createdTransaction = await _financialAccountRepository.CreateFinancialTransaction(newTransaction);

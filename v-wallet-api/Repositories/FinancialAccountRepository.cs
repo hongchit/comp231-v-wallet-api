@@ -66,9 +66,8 @@ namespace v_wallet_api.Repositories
 
         public async Task<List<FinancialTransaction>> GetFinancialTransactions(List<string> accountIds)
         {
-            var transactions = await _context.FinancialTransaction
-                .Where(x => accountIds.Contains(x.AccountId.ToString()))
-                .ToListAsync();
+            var ids = accountIds.Select(x => Guid.Parse(x)).ToList();
+            var transactions = await _context.FinancialTransaction.Where(x => ids.Contains(x.AccountId)).ToListAsync();
 
             return transactions;
         }

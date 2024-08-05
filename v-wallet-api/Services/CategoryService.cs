@@ -23,7 +23,7 @@ namespace v_wallet_api.Services
             {
                 var categoryViewModel = new CategoryViewModel
                 {
-                    Id = category.Id,
+                    Id = category.Id.ToString(),
                     Type = Enum.Parse<CategoryType>(category.Name),
                 };
 
