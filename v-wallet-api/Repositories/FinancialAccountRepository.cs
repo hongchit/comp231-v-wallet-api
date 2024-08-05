@@ -13,7 +13,27 @@ namespace v_wallet_api.Repositories
             _context = context;
         }
 
-        public async Task<List<FinancialAccount>> GetFinancialAccountsByUserId(string userId)
+        public async Task<List<FinancialAccount>> GetFinancialAccountsById(List<string> accountIds)
+        {
+            var accounts = await _context.FinancialAccount.Where(x => accountIds.Contains(x.Id.ToString())).Join(
+                _context.FinancialAccountType, account => account.AccountTypeId, accountType => accountType.Id,
+                (account, accountType) => new FinancialAccount
+                {
+                    Id = account.Id,
+                    AccountName = account.AccountName,
+                    AccountNumber = account.AccountNumber,
+                    InitialValue = account.InitialValue,
+                    CurrentValue = account.CurrentValue,
+                    AccountTypeId = account.AccountTypeId,
+                    CurrencyId = account.CurrencyId,
+                    UserProfileId = account.UserProfileId,
+                    AccountType = accountType
+                }).ToListAsync();
+
+            return accounts;
+        }
+
+        public async Task<List<FinancialAccount>> GetFinancialAccountsByUserProfileId(string userId)
         {
             var accounts = await _context.FinancialAccount
                 .Where(x => x.UserProfileId == Guid.Parse(userId))
@@ -44,11 +64,13 @@ namespace v_wallet_api.Repositories
             return transaction;
         }
 
-        public async Task<List<FinancialTransaction>> GetFinancialTransactions(Guid accountId)
+        public async Task<List<FinancialTransaction>> GetFinancialTransactions(List<string> accountIds)
         {
-            var transactions = _context.FinancialTransaction.Where(x => x.AccountId == accountId).ToList();
+            var transactions = await _context.FinancialTransaction
+                .Where(x => accountIds.Contains(x.AccountId.ToString()))
+                .ToListAsync();
 
-            return await Task.FromResult(transactions);
+            return transactions;
         }
 
         public async Task<FinancialTransaction> CreateFinancialTransaction(FinancialTransaction transaction)

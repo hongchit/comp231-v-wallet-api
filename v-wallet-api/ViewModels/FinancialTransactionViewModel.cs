@@ -4,7 +4,7 @@ namespace v_wallet_api.ViewModels
 {
     public class FinancialTransactionViewModel
     {
-        public Guid id { get; set; }
+        public Guid Id { get; set; }
         public decimal Amount { get; set; }
         public string Description { get; set; }
         public TransactionType TransactionType { get; set; }

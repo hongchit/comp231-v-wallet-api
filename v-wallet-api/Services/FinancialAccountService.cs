@@ -36,7 +36,7 @@ namespace v_wallet_api.Services
 
             var transactionViewModel = new FinancialTransactionViewModel
             {
-                id = transaction.Id,
+                Id = transaction.Id,
                 Amount = transaction.Amount,
                 Description = transaction.Description,
                 TransactionType = transaction.TransactionType,
@@ -53,7 +53,8 @@ namespace v_wallet_api.Services
 
         public async Task<List<FinancialTransactionViewModel>> GetTransactionsByFinancialAccountId(string accountId)
         {
-            var transactions = await _financialAccountRepository.GetFinancialTransactions(Guid.Parse(accountId));
+            var transactions =
+                await _financialAccountRepository.GetFinancialTransactions(new List<string> { accountId });
 
             var userProfile = await _userProfileService.GetUserProfileByAccountId(accountId);
 
@@ -67,7 +68,7 @@ namespace v_wallet_api.Services
 
                 var transactionViewModel = new FinancialTransactionViewModel
                 {
-                    id = transaction.Id,
+                    Id = transaction.Id,
                     Amount = transaction.Amount,
                     Description = transaction.Description,
                     TransactionType = transaction.TransactionType,
@@ -85,29 +86,33 @@ namespace v_wallet_api.Services
             return transactionViewModels;
         }
 
-        public async Task<List<FinancialTransactionViewModel>> GetTransactionsByUserId(string userId)
+        public async Task<List<FinancialTransactionViewModel>> GetTransactionsByUserProfileId(string userId)
         {
-            var transactions = await _financialAccountRepository.GetFinancialTransactions(Guid.Parse(userId));
+            var financialAccounts = await _financialAccountRepository.GetFinancialAccountsByUserProfileId(userId);
 
-            var sevenDaysTransactions = transactions.Where(x => x.TransactionDate >= DateTime.Now.AddDays(-7)).ToList();
+            var accountIds = financialAccounts.Select(x => x.Id.ToString()).ToList();
+            var financialTransactions = await _financialAccountRepository.GetFinancialTransactions(accountIds);
 
-            var userProfile = await _userProfileService.GetUserProfileByAccountId(userId);
+            var sevenDaysTransactions = financialTransactions.Where(x => x.TransactionDate >= DateTime.Now.AddDays(-7)).ToList();
+
             var categories = (await _categoryService.GetCategories());
 
             var transactionResults = new List<FinancialTransactionViewModel>();
 
             foreach (var transaction in sevenDaysTransactions)
             {
+                var financialAccount = financialAccounts.First(x => x.Id == transaction.AccountId);
+
                 var transactionViewModel = new FinancialTransactionViewModel
                 {
-                    id = transaction.Id,
+                    Id = transaction.Id,
                     Amount = transaction.Amount,
                     Description = transaction.Description,
                     TransactionType = transaction.TransactionType,
                     TransactionInformation = Enum.GetName(typeof(TransactionType), transaction.TransactionType),
                     TransactionDate = transaction.TransactionDate,
-                    AccountId = transaction.AccountId,
-                    AccountName = userProfile.FullName,
+                    AccountId = financialAccount.Id,
+                    AccountName = financialAccount.AccountName,
                     CategoryId = transaction.CategoryId,
                     CategoryName = categories.FirstOrDefault(x => x.Id.Equals(transaction.CategoryId)).Name
                 };
@@ -139,7 +144,7 @@ namespace v_wallet_api.Services
         {
             try
             {
-                var financialAccounts = await _financialAccountRepository.GetFinancialAccountsByUserId(userId);
+                var financialAccounts = await _financialAccountRepository.GetFinancialAccountsByUserProfileId(userId);
 
                 var financialAccountsViewModel = new List<FinancialAccountViewModel>();
 

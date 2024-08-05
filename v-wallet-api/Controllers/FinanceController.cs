@@ -31,15 +31,15 @@ namespace v_wallet_api.Controllers
             return Ok(transactions);
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpGet("/{userId}/transactions")]
-        public async Task<IActionResult> GetFinancialTransactions(string userId)
+        [Microsoft.AspNetCore.Mvc.HttpGet("{userProfileId}/transaction")]
+        public async Task<IActionResult> GetFinancialTransactions(string userProfileId)
         {
-            if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userProfileId))
             {
                 return BadRequest("Failed to fetch transactions");
             }
 
-            var transactions = await _financeService.GetTransactionsByUserId(userId);
+            var transactions = await _financeService.GetTransactionsByUserProfileId(userProfileId);
 
             return Ok(transactions);
         }
