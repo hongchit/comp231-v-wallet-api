@@ -141,6 +141,9 @@ namespace v_wallet_api.Services
 
             var createdTransaction = await _financialAccountRepository.CreateFinancialTransaction(newTransaction);
 
+            await UpdateFinancialAccountBalance(transaction.AccountId.ToString(), transaction.Amount,
+                Enum.Parse<TransactionType>(transaction.TransactionInformation));
+
             return createdTransaction.Id.ToString();
         }
 
@@ -173,6 +176,31 @@ namespace v_wallet_api.Services
                 Debug.WriteLine(ex.Message);
                 return null;
             }
+        }
+
+        private async Task UpdateFinancialAccountBalance(string accountId, decimal price, TransactionType type)
+        {
+            var existingAccount =
+                (await _financialAccountRepository.GetFinancialAccountsById(new List<string> { accountId }))
+                .FirstOrDefault();
+
+            if (existingAccount == null)
+            {
+                return;
+            }
+
+            switch (type)
+            {
+                case TransactionType.Income:
+                    existingAccount.CurrentValue += price;
+                    break;
+                case TransactionType.Expense:
+                default:
+                    existingAccount.CurrentValue -= price;
+                    break;
+            }
+
+            await _financialAccountRepository.UpdateFinancialAccount(existingAccount);
         }
     }
 }

@@ -80,5 +80,11 @@ namespace v_wallet_api.Repositories
 
             return transaction;
         }
+
+        public async Task UpdateFinancialAccount(FinancialAccount account)
+        {
+            _context.FinancialAccount.Update(account);
+            await _context.SaveChangesAsync();
+        }
     }
 }

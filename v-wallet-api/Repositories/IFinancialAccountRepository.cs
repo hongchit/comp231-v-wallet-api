@@ -9,5 +9,6 @@ namespace v_wallet_api.Repositories
         Task<FinancialTransaction?> GetFinancialTransaction(Guid id);
         Task<List<FinancialTransaction>> GetFinancialTransactions(List<string> accountIds);
         Task<FinancialTransaction> CreateFinancialTransaction(FinancialTransaction transaction);
+        Task UpdateFinancialAccount(FinancialAccount account);
     }
 }
