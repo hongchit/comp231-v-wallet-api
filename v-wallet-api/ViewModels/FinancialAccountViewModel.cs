@@ -27,7 +27,7 @@ namespace v_wallet_api.ViewModels
         public decimal Balance { get; set; }
 
         [SwaggerSchema(ReadOnly = true)]
-        public FinancialAccountType FinancialAccountType { get; set; } = new FinancialAccountType();
+        public FinancialAccountType? FinancialAccountType { get; set; } = new FinancialAccountType();
 
     }
 }

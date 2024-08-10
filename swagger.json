@@ -255,6 +255,36 @@
         }
       }
     },
+    "/api/Finance/{userProfileId}/account/{accountId}": {
+      "get": {
+        "tags": [
+          "Finance"
+        ],
+        "parameters": [
+          {
+            "name": "userProfileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Finance/{userProfileId}/account/{financialAccountId}": {
       "delete": {
         "tags": [

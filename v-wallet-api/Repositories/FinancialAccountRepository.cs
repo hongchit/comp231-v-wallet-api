@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using System.Collections;
 using v_wallet_api.Data;
 using v_wallet_api.Models;
 
@@ -83,9 +85,10 @@ namespace v_wallet_api.Repositories
 
         public async Task<FinancialAccount?> GetFinancialAccount(Guid id)
         {
-            var account = await _context.FinancialAccount.FirstOrDefaultAsync(x => x.Id == id);
+            var list = new List<string> { id.ToString() };
+            var accounts = await GetFinancialAccountsById(list);
 
-            return account;
+            return accounts.FirstOrDefault();
         }
 
         public async Task<FinancialAccount> CreateFinancialAccount(FinancialAccount account)

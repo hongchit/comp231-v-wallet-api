@@ -71,6 +71,24 @@ namespace v_wallet_api.Controllers
             return Ok(financialAccounts);
         }
 
+
+        [Microsoft.AspNetCore.Mvc.HttpGet("{userProfileId}/account/{accountId}")]
+        public async Task<IActionResult> GetAccounts(string userProfileId, string accountId)
+        {
+            if (string.IsNullOrEmpty(userProfileId))
+            {
+                return BadRequest("Failed to load financial accounts");
+            }
+            if (string.IsNullOrEmpty(accountId))
+            {
+                return BadRequest("Invalid account Id");
+            }
+
+            var financialAccount = await _financeService.GetFinancialAccount(accountId);
+
+            return Ok(financialAccount);
+        }
+
         [Microsoft.AspNetCore.Mvc.HttpPost("{userProfileId}/account")]
         public async Task<IActionResult> CreateFinancialAccount(string userProfileId, [Microsoft.AspNetCore.Mvc.FromBody] FinancialAccountViewModel financialAccountVM)
         {
