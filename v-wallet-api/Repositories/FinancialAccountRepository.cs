@@ -15,20 +15,27 @@ namespace v_wallet_api.Repositories
 
         public async Task<List<FinancialAccount>> GetFinancialAccountsById(List<string> accountIds)
         {
-            var accounts = await _context.FinancialAccount.Where(x => accountIds.Contains(x.Id.ToString())).Join(
-                _context.FinancialAccountType, account => account.AccountTypeId, accountType => accountType.Id,
-                (account, accountType) => new FinancialAccount
-                {
-                    Id = account.Id,
-                    AccountName = account.AccountName,
-                    AccountNumber = account.AccountNumber,
-                    InitialValue = account.InitialValue,
-                    CurrentValue = account.CurrentValue,
-                    AccountTypeId = account.AccountTypeId,
-                    CurrencyId = account.CurrencyId,
-                    UserProfileId = account.UserProfileId,
-                    AccountType = accountType
-                }).ToListAsync();
+            var accounts = await _context.FinancialAccount
+                .AsNoTracking()
+                .Where(x => accountIds.Contains(x.Id.ToString()))
+                .Join(
+                    _context.FinancialAccountType.AsNoTracking(),
+                    account => account.AccountTypeId,
+                    accountType => accountType.Id,
+                    (account, accountType) => new FinancialAccount
+                    {
+                        Id = account.Id,
+                        AccountName = account.AccountName,
+                        AccountNumber = account.AccountNumber,
+                        InitialValue = account.InitialValue,
+                        CurrentValue = account.CurrentValue,
+                        AccountTypeId = account.AccountTypeId,
+                        CurrencyId = account.CurrencyId,
+                        UserProfileId = account.UserProfileId,
+                        AccountType = accountType
+                    })
+                .ToListAsync();
+
 
             return accounts;
         }

@@ -56,15 +56,13 @@ namespace v_wallet_api.Services
             var transactions =
                 await _financialAccountRepository.GetFinancialTransactions(new List<string> { accountId });
 
-            var userProfile = await _userProfileService.GetUserProfileByAccountId(accountId);
-
             var categories = await _categoryService.GetCategories();
 
             var transactionViewModels = new List<FinancialTransactionViewModel>();
 
             foreach (var transaction in transactions)
             {
-                var category = categories.FirstOrDefault(x => x.Id.Equals(transaction.CategoryId));
+                var category = categories.FirstOrDefault(x => x.Id.Equals(transaction.CategoryId.ToString()));
 
                 var transactionViewModel = new FinancialTransactionViewModel
                 {
@@ -75,7 +73,6 @@ namespace v_wallet_api.Services
                     TransactionInformation = transaction.TransactionType,
                     TransactionDate = transaction.TransactionDate,
                     AccountId = transaction.AccountId,
-                    AccountName = userProfile.FullName,
                     CategoryId = transaction.CategoryId,
                     CategoryName = category.Name
                 };
