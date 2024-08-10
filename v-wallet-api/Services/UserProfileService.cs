@@ -49,7 +49,7 @@ namespace v_wallet_api.Services
             }
 
             // Validate the value
-            var today = DateOnly.FromDateTime(DateTime.Today);
+            var today = DateTime.Now;
             if (userProfileViewModel.Birthdate > today)
             {
                 throw new Exception("Invalid date for Birthdate");
@@ -81,17 +81,24 @@ namespace v_wallet_api.Services
 
         public async Task<UserProfileViewModel?> GetUserProfileByAccountId(string accountId)
         {
-            var userProfile = await _userProfileRepository.GetUserProfileByAccountID(Guid.Parse(accountId));
-
-            var userProfileViewModel = new UserProfileViewModel
+            try
             {
-                Id = userProfile.Id.ToString(),
-                Firstname = userProfile.Firstname,
-                Lastname = userProfile.Lastname,
-                Birthdate = userProfile.Birthdate
-            };
+                var userProfile = await _userProfileRepository.GetUserProfileByAccountID(Guid.Parse(accountId));
 
-            return userProfileViewModel;
+                var userProfileViewModel = new UserProfileViewModel
+                {
+                    Id = userProfile.Id.ToString(),
+                    Firstname = userProfile.Firstname,
+                    Lastname = userProfile.Lastname,
+                    Birthdate = userProfile.Birthdate
+                };
+
+                return userProfileViewModel;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to get user profile", ex);
+            }
         }
     }
 }

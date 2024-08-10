@@ -17,35 +17,42 @@ namespace v_wallet_api.Services
 
         public async Task<AccountViewModel?> Login(LoginViewModel loginViewModel)
         {
-            var userAccount = await _accountRepository.GetUser(loginViewModel.Email, loginViewModel.Password);
-
-            if (userAccount == null)
+            try
             {
-                return null;
+                var userAccount = await _accountRepository.GetUser(loginViewModel.Email, loginViewModel.Password);
+
+                if (userAccount == null)
+                {
+                    return null;
+                }
+
+                var authenticationModel = new AuthenticateViewModel
+                {
+                    PrimaryId = userAccount.Id.ToString(),
+                    Username = userAccount.Email,
+                    Name = userAccount.Email,
+                    Role = userAccount.AccountType.ToString()
+                };
+
+                var token = GlobalIntegrationJwtManager.GenerateToken(authenticationModel);
+
+                var userProfile = await _userProfileService.GetUserProfileByAccountId(userAccount.Id.ToString());
+
+                var userData = new AccountViewModel
+                {
+                    AccountId = userAccount.Id,
+                    ProfileId = userProfile.Id,
+                    Email = userAccount.Email,
+                    Name = userProfile.FullName,
+                    Token = token
+                };
+
+                return userData;
             }
-
-            var authenticationModel = new AuthenticateViewModel
+            catch (Exception ex)
             {
-                PrimaryId = userAccount.Id.ToString(),
-                Username = userAccount.Email,
-                Name = userAccount.Email,
-                Role = userAccount.AccountType.ToString()
-            };
-
-            var token = GlobalIntegrationJwtManager.GenerateToken(authenticationModel);
-
-            var userProfile = await _userProfileService.GetUserProfileByAccountId(userAccount.Id.ToString());
-
-            var userData = new AccountViewModel
-            {
-                AccountId = userAccount.Id,
-                ProfileId = userProfile.Id,
-                Email = userAccount.Email,
-                Name = userProfile.FullName,
-                Token = token
-            };
-
-            return userData;
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<AccountViewModel> GetAccountById(string accountId)
