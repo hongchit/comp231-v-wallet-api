@@ -21,7 +21,10 @@ namespace v_wallet_api.Repositories
 
         public async Task<UserProfile?> GetUserProfileByAccountID(Guid accountId) 
         {
-            var userProfile = await _context.UserProfile.FirstOrDefaultAsync(x => x.UserAccountId == accountId);
+            var userProfile = await _context.UserProfile
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserAccountId == accountId);
+
 
             return userProfile;
         }

@@ -69,5 +69,18 @@ namespace v_wallet_api.Controllers
 
             return Ok(financialAccounts);
         }
+
+        [Microsoft.AspNetCore.Mvc.HttpGet("{financialAccountId}")]
+        public async Task<IActionResult> GetAccount([FromUri] string financialAccountId)
+        {
+            if (string.IsNullOrEmpty(financialAccountId))
+            {
+                return BadRequest("Failed to load financial account");
+            }
+
+            var financialAccount = await _financeService.GetFinancialAccountByAccountId(financialAccountId);
+
+            return Ok(financialAccount);
+        }
     }
 }
