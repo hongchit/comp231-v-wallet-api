@@ -2,20 +2,29 @@
 using v_wallet_api.Models;
 using v_wallet_api.Repositories;
 using v_wallet_api.ViewModels;
-using FinancialAccountType = v_wallet_api.ViewModels.FinancialAccountType;
 
 namespace v_wallet_api.Services
 {
     public class FinancialAccountService : IFinancialAccountService
     {
+        private readonly IUserProfileRepository _userProfileRepository;
         private readonly IFinancialAccountRepository _financialAccountRepository;
+        private readonly IFinancialAccountTypeRepository _financialAccountTypeRepository;
+        private readonly ICurrencyRepository _currencyRepository;
         private readonly IUserProfileService _userProfileService;
         private readonly ICategoryService _categoryService;
 
-        public FinancialAccountService(IFinancialAccountRepository financialAccountRepository,
+        public FinancialAccountService(
+            IUserProfileRepository userProfileRepository,
+            IFinancialAccountRepository financialAccountRepository,
+            IFinancialAccountTypeRepository financialAccountTypeRepository,
+            ICurrencyRepository currencyRepository,
             IUserProfileService userProfileService, ICategoryService categoryService)
         {
+            _userProfileRepository = userProfileRepository;
             _financialAccountRepository = financialAccountRepository;
+            _financialAccountTypeRepository = financialAccountTypeRepository;
+            _currencyRepository = currencyRepository;
             _userProfileService = userProfileService;
             _categoryService = categoryService;
         }
@@ -149,20 +158,22 @@ namespace v_wallet_api.Services
             try
             {
                 var financialAccounts = await _financialAccountRepository.GetFinancialAccountsByUserProfileId(userId);
+                var allCurrencies = await _currencyRepository.GetALlCurrencies();
 
                 var financialAccountsViewModel = new List<FinancialAccountViewModel>();
 
                 foreach (var financialAccount in financialAccounts)
                 {
-
+                    var currency = allCurrencies.FirstOrDefault(c => c.Id == financialAccount.CurrencyId);
                     financialAccountsViewModel.Add(new FinancialAccountViewModel
                     {
                         Id = financialAccount.Id.ToString(),
                         Name = financialAccount.AccountName,
                         Number = financialAccount.AccountNumber,
-                        Type = Enum.Parse<FinancialAccountType>(financialAccount.AccountType.Name, true),
-                        FinancialAccountType = financialAccount.AccountType.Name,
-                        Balance = financialAccount.CurrentValue
+                        Type = financialAccount.AccountType.Name,
+                        Currency = currency.Symbol,
+                        Balance = financialAccount.CurrentValue,
+                        FinancialAccountType = financialAccount.AccountType,
                     });
                 }
 
@@ -220,6 +231,103 @@ namespace v_wallet_api.Services
             }
 
             await _financialAccountRepository.UpdateFinancialAccount(existingAccount);
+        }
+
+        public async Task<FinancialAccountViewModel?> GetFinancialAccount(string id)
+        {
+            var financialAccount = await _financialAccountRepository.GetFinancialAccount(Guid.Parse(id));
+            if (financialAccount == null)
+            {
+                return null;
+            }
+            var allCurrencies = await _currencyRepository.GetALlCurrencies();
+            var currency = allCurrencies.FirstOrDefault(c => c.Id == financialAccount.CurrencyId);
+            var financialAccountViewModel = new FinancialAccountViewModel
+            {
+                Id = financialAccount.Id.ToString(),
+                Name = financialAccount.AccountName,
+                Number = financialAccount.AccountNumber,
+                Type = financialAccount.AccountType.Name,
+                Currency = currency.Symbol,
+                Balance = financialAccount.CurrentValue,
+                FinancialAccountType = financialAccount.AccountType,
+            };
+            return financialAccountViewModel;
+        }
+        public async Task<string> CreateFinancialAccount(string userProfileId, FinancialAccountViewModel financialAccountVM)
+        {
+            var userProfile = await _userProfileRepository.GetUserProfile(Guid.Parse(userProfileId));
+            if (userProfile == null) {
+                throw new KeyNotFoundException($"Unknown user profile ID: {userProfileId}");
+            }
+            var allCurrencies = await _currencyRepository.GetALlCurrencies();
+            var currency = allCurrencies.FirstOrDefault(c => c.Symbol == financialAccountVM.Currency);
+            if (currency == null)
+            {
+                throw new KeyNotFoundException($"Unsupported currency: {financialAccountVM.Currency}");
+            }
+            var accountType = await _financialAccountTypeRepository.GetFinancialAccountTypeByName(financialAccountVM.Type);
+            if (accountType == null) {
+                throw new KeyNotFoundException($"Unsupported Account Type: {financialAccountVM.Type}");
+            }
+            var financialAccount = new FinancialAccount
+            {
+                Id = Guid.NewGuid(),
+                AccountName = financialAccountVM.Name,
+                AccountNumber = financialAccountVM.Number,
+                InitialValue = financialAccountVM.Balance,
+                CurrentValue = financialAccountVM.Balance,
+                AccountTypeId = accountType.Id,
+                CurrencyId = currency.Id,
+                UserProfileId = userProfile.Id,
+            };
+            var created = await _financialAccountRepository.CreateFinancialAccount(financialAccount);
+            return created.Id.ToString();
+        }
+        public async Task UpdateFinancialAccount(string userProfileId, FinancialAccountViewModel financialAccountVM)
+        {
+            var userProfile = await _userProfileRepository.GetUserProfile(Guid.Parse(userProfileId));
+            if (userProfile == null || userProfile.Id != Guid.Parse(userProfileId))
+            {
+                throw new KeyNotFoundException($"Unknown user profile ID: {userProfileId}");
+            }
+            var financialAccount = await _financialAccountRepository.GetFinancialAccount(Guid.Parse(financialAccountVM.Id));
+            if (financialAccount == null)
+            {
+                throw new KeyNotFoundException($"Unknown financial account: {financialAccountVM.Id}");
+            }
+            var allCurrencies = await _currencyRepository.GetALlCurrencies();
+            var currency = allCurrencies.FirstOrDefault(c => c.Symbol == financialAccountVM.Currency);
+            if (currency == null)
+            {
+                throw new KeyNotFoundException($"Unsupported currency: {financialAccountVM.Currency}");
+            }
+            var accountType = await _financialAccountTypeRepository.GetFinancialAccountTypeByName(financialAccountVM.Type);
+            if (accountType == null)
+            {
+                throw new KeyNotFoundException($"Unsupported Account Type ID: {financialAccountVM.Type}");
+            }
+            financialAccount.AccountName = financialAccountVM.Name;
+            financialAccount.AccountNumber = financialAccountVM.Number;
+            financialAccount.InitialValue = financialAccountVM.Balance;
+            financialAccount.CurrentValue = financialAccountVM.Balance;
+            financialAccount.AccountTypeId = accountType.Id;
+            financialAccount.CurrencyId = currency.Id;
+            await _financialAccountRepository.UpdateFinancialAccount(financialAccount);
+        }
+        public async Task DeleteFinancialAccount(string userProfileId, string id)
+        {
+            var userProfile = await _userProfileRepository.GetUserProfile(Guid.Parse(userProfileId));
+            if (userProfile == null || userProfile.Id != Guid.Parse(userProfileId))
+            {
+                throw new KeyNotFoundException($"Unknown user profile ID: {userProfileId}");
+            }
+            var financialAccount = await _financialAccountRepository.GetFinancialAccount(Guid.Parse(id));
+            if (financialAccount == null)
+            {
+                throw new KeyNotFoundException($"Unknown financial account: {id}");
+            }
+            await _financialAccountRepository.DeleteFinancialAccount(financialAccount);
         }
     }
 }

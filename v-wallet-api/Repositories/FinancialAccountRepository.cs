@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using System.Collections;
 using v_wallet_api.Data;
 using v_wallet_api.Models;
 
@@ -88,9 +90,31 @@ namespace v_wallet_api.Repositories
             return transaction;
         }
 
+        public async Task<FinancialAccount?> GetFinancialAccount(Guid id)
+        {
+            var list = new List<string> { id.ToString() };
+            var accounts = await GetFinancialAccountsById(list);
+
+            return accounts.FirstOrDefault();
+        }
+
+        public async Task<FinancialAccount> CreateFinancialAccount(FinancialAccount account)
+        {
+            await _context.FinancialAccount.AddAsync(account);
+            await _context.SaveChangesAsync();
+            return account;
+        }
+
         public async Task UpdateFinancialAccount(FinancialAccount account)
         {
             _context.FinancialAccount.Update(account);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteFinancialAccount(FinancialAccount account)
+        {
+            if (account == null) return;
+            _context.FinancialAccount.Remove(account);
             await _context.SaveChangesAsync();
         }
     }

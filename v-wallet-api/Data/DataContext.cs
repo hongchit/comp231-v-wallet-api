@@ -17,6 +17,7 @@ namespace v_wallet_api.Data
         public DbSet<FinancialAccountType> FinancialAccountType { get; set; }
         public DbSet<FinancialTransaction> FinancialTransaction { get; set; }
         public DbSet<Category> Category { get; set; }
+        public DbSet<Currency> Currency { get; set; }
 
         public DbSet<UserProfile> UserProfile { get; set; }
 
@@ -38,6 +39,8 @@ namespace v_wallet_api.Data
             modelBuilder.Entity<FinancialAccountType>().ToTable("tbl_FinancialAccountType");
 
             modelBuilder.Entity<Category>().ToTable("tbl_Category");
+            modelBuilder.Entity<Currency>().ToTable("tbl_Currency");
+
 
         }
     }
