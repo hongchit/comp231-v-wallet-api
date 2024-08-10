@@ -81,9 +81,30 @@ namespace v_wallet_api.Repositories
             return transaction;
         }
 
+        public async Task<FinancialAccount?> GetFinancialAccount(Guid id)
+        {
+            var account = await _context.FinancialAccount.FirstOrDefaultAsync(x => x.Id == id);
+
+            return account;
+        }
+
+        public async Task<FinancialAccount> CreateFinancialAccount(FinancialAccount account)
+        {
+            await _context.FinancialAccount.AddAsync(account);
+            await _context.SaveChangesAsync();
+            return account;
+        }
+
         public async Task UpdateFinancialAccount(FinancialAccount account)
         {
             _context.FinancialAccount.Update(account);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteFinancialAccount(FinancialAccount account)
+        {
+            if (account == null) return;
+            _context.FinancialAccount.Remove(account);
             await _context.SaveChangesAsync();
         }
     }
