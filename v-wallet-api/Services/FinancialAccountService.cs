@@ -189,27 +189,6 @@ namespace v_wallet_api.Services
             }
         }
 
-        public async Task<FinancialAccountViewModel?> GetFinancialAccountByAccountId(string financialAccountId)
-        {
-            var existingAccount =
-                (await _financialAccountRepository.GetFinancialAccountsById(new List<string> { financialAccountId }))
-                .FirstOrDefault();
-
-            if (existingAccount == null) {
-                return null;
-            }
-
-            return new FinancialAccountViewModel
-            {
-                Id = existingAccount.Id.ToString(),
-                Name = existingAccount.AccountName,
-                Number = existingAccount.AccountNumber,
-                Type = Enum.Parse<FinancialAccountType>(existingAccount.AccountType.Name, true),
-                FinancialAccountType = existingAccount.AccountType.Name,
-                Balance = existingAccount.CurrentValue
-            };
-        }
-
         private async Task UpdateFinancialAccountBalance(string accountId, decimal price, TransactionType type)
         {
             var existingAccount =
@@ -235,9 +214,9 @@ namespace v_wallet_api.Services
             await _financialAccountRepository.UpdateFinancialAccount(existingAccount);
         }
 
-        public async Task<FinancialAccountViewModel?> GetFinancialAccount(string id)
+        public async Task<FinancialAccountViewModel?> GetFinancialAccountByAccountId(string financialAccountId)
         {
-            var financialAccount = await _financialAccountRepository.GetFinancialAccount(Guid.Parse(id));
+            var financialAccount = await _financialAccountRepository.GetFinancialAccount(Guid.Parse(financialAccountId));
             if (financialAccount == null)
             {
                 return null;

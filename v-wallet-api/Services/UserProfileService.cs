@@ -84,7 +84,10 @@ namespace v_wallet_api.Services
             try
             {
                 var userProfile = await _userProfileRepository.GetUserProfileByAccountID(Guid.Parse(accountId));
-
+                if (userProfile is null)
+                {
+                    return null;
+                }
                 var userProfileViewModel = new UserProfileViewModel
                 {
                     Id = userProfile.Id.ToString(),

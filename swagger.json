@@ -255,7 +255,7 @@
         }
       }
     },
-    "/api/Finance/{userProfileId}/account/{accountId}": {
+    "/api/Finance/{userProfileId}/account/{financialAccountId}": {
       "get": {
         "tags": [
           "Finance"
@@ -270,7 +270,7 @@
             }
           },
           {
-            "name": "accountId",
+            "name": "financialAccountId",
             "in": "path",
             "required": true,
             "schema": {
@@ -283,9 +283,7 @@
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/Finance/{userProfileId}/account/{financialAccountId}": {
+      },
       "delete": {
         "tags": [
           "Finance"
@@ -484,7 +482,7 @@
           },
           "birthdate": {
             "type": "string",
-            "format": "date",
+            "format": "date-time",
             "nullable": true
           },
           "fullName": {
