@@ -11,5 +11,6 @@ namespace v_wallet_api.ViewModels
         public FinancialAccountType Type { get; set; }
         public string FinancialAccountType { get; set; }
         public decimal Balance { get; set; }
+        public decimal InitialBalance { get; set; }
     }
 }

@@ -192,7 +192,8 @@ namespace v_wallet_api.Services
                 Number = existingAccount.AccountNumber,
                 Type = Enum.Parse<FinancialAccountType>(existingAccount.AccountType.Name, true),
                 FinancialAccountType = existingAccount.AccountType.Name,
-                Balance = existingAccount.CurrentValue
+                Balance = existingAccount.CurrentValue,
+                InitialBalance = existingAccount.InitialValue
             };
         }
 
