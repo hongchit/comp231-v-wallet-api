@@ -65,8 +65,6 @@ namespace v_wallet_api.Services
             var transactions =
                 await _financialAccountRepository.GetFinancialTransactions(new List<string> { accountId });
 
-            var userProfile = await _userProfileService.GetUserProfileByAccountId(accountId);
-
             var categories = await _categoryService.GetCategories();
 
             var transactionViewModels = new List<FinancialTransactionViewModel>();
@@ -84,7 +82,6 @@ namespace v_wallet_api.Services
                     TransactionInformation = transaction.TransactionType,
                     TransactionDate = transaction.TransactionDate,
                     AccountId = transaction.AccountId,
-                    AccountName = userProfile.FullName,
                     CategoryId = transaction.CategoryId,
                     CategoryName = category.Name
                 };
@@ -175,6 +172,7 @@ namespace v_wallet_api.Services
                         Number = financialAccount.AccountNumber,
                         Type = financialAccount.AccountType.Name,
                         Currency = currency.Symbol,
+                        InitialBalance = financialAccount.InitialValue,
                         Balance = financialAccount.CurrentValue,
                         FinancialAccountType = financialAccount.AccountType,
                     });
@@ -231,6 +229,7 @@ namespace v_wallet_api.Services
                 Type = financialAccount.AccountType.Name,
                 Currency = currency.Symbol,
                 Balance = financialAccount.CurrentValue,
+                InitialBalance = financialAccount.InitialValue,
                 FinancialAccountType = financialAccount.AccountType,
             };
             return financialAccountViewModel;
@@ -256,8 +255,8 @@ namespace v_wallet_api.Services
                 Id = Guid.NewGuid(),
                 AccountName = financialAccountVM.Name,
                 AccountNumber = financialAccountVM.Number,
-                InitialValue = financialAccountVM.Balance,
-                CurrentValue = financialAccountVM.Balance,
+                InitialValue = financialAccountVM.InitialBalance,
+                CurrentValue = financialAccountVM.InitialBalance, //when new account is created, the current balance should be the same as the initial balance
                 AccountTypeId = accountType.Id,
                 CurrencyId = currency.Id,
                 UserProfileId = userProfile.Id,
@@ -291,7 +290,7 @@ namespace v_wallet_api.Services
             }
             financialAccount.AccountName = financialAccountVM.Name;
             financialAccount.AccountNumber = financialAccountVM.Number;
-            financialAccount.InitialValue = financialAccountVM.Balance;
+            financialAccount.InitialValue = financialAccountVM.InitialBalance;
             financialAccount.CurrentValue = financialAccountVM.Balance;
             financialAccount.AccountTypeId = accountType.Id;
             financialAccount.CurrencyId = currency.Id;

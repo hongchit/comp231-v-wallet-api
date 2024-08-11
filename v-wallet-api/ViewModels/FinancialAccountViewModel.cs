@@ -1,6 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
-using System.Security;
 using v_wallet_api.Models;
 
 namespace v_wallet_api.ViewModels
@@ -25,6 +24,8 @@ namespace v_wallet_api.ViewModels
 
         [SwaggerSchema(ReadOnly = true)]
         public decimal Balance { get; set; }
+
+        public decimal InitialBalance { get; set; }
 
         [SwaggerSchema(ReadOnly = true)]
         public FinancialAccountType? FinancialAccountType { get; set; } = new FinancialAccountType();
