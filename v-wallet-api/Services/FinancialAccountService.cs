@@ -261,6 +261,7 @@ namespace v_wallet_api.Services
                 AccountTypeId = accountType.Id,
                 CurrencyId = currency.Id,
                 UserProfileId = userProfile.Id,
+                AccountType = accountType,
             };
             var created = await _financialAccountRepository.CreateFinancialAccount(financialAccount);
             return created.Id.ToString();
@@ -294,6 +295,7 @@ namespace v_wallet_api.Services
             financialAccount.CurrentValue = financialAccountVM.Balance;
             financialAccount.AccountTypeId = accountType.Id;
             financialAccount.CurrencyId = currency.Id;
+            financialAccount.AccountType = accountType;
             await _financialAccountRepository.UpdateFinancialAccount(financialAccount);
         }
         public async Task DeleteFinancialAccount(string userProfileId, string id)
