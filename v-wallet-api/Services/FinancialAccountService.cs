@@ -73,7 +73,7 @@ namespace v_wallet_api.Services
 
             foreach (var transaction in transactions)
             {
-                var category = categories.FirstOrDefault(x => x.Id.Equals(transaction.CategoryId));
+                var category = categories.FirstOrDefault(x => x.Id.Equals(transaction.CategoryId.ToString()));
 
                 var transactionViewModel = new FinancialTransactionViewModel
                 {
