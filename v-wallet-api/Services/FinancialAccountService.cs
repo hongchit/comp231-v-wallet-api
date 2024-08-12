@@ -240,6 +240,7 @@ namespace v_wallet_api.Services
             if (userProfile == null) {
                 throw new KeyNotFoundException($"Unknown user profile ID: {userProfileId}");
             }
+
             var allCurrencies = await _currencyRepository.GetAllCurrencies();
             var currency = allCurrencies.FirstOrDefault(c => c.Symbol == financialAccountVM.Currency);
             if (currency == null)

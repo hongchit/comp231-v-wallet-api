@@ -70,13 +70,9 @@ namespace v_wallet_api.Controllers
         }
 
 
-        [Microsoft.AspNetCore.Mvc.HttpGet("{userProfileId}/account/{financialAccountId}")]
-        public async Task<IActionResult> GetAccountById(string userProfileId, string financialAccountId)
+        [Microsoft.AspNetCore.Mvc.HttpGet("account/{financialAccountId}")]
+        public async Task<IActionResult> GetAccountById(string financialAccountId)
         {
-            if (string.IsNullOrEmpty(userProfileId))
-            {
-                return BadRequest("Failed to load financial accounts");
-            }
             if (string.IsNullOrEmpty(financialAccountId))
             {
                 return BadRequest("Invalid account Id");
@@ -88,13 +84,16 @@ namespace v_wallet_api.Controllers
         }
 
 
-        [Microsoft.AspNetCore.Mvc.HttpPost("{userProfileId}/account")]
-        public async Task<IActionResult> CreateFinancialAccount(string userProfileId, [Microsoft.AspNetCore.Mvc.FromBody] FinancialAccountViewModel financialAccountVM)
+        [Microsoft.AspNetCore.Mvc.HttpPost("account")]
+        public async Task<IActionResult> CreateFinancialAccount([Microsoft.AspNetCore.Mvc.FromBody] FinancialAccountViewModel financialAccountVM)
         {
-            if (string.IsNullOrEmpty(userProfileId))
+            var userProfileId = HttpContext.Request.Headers?["UserProfileId"] ?? string.Empty;
+
+            if(string.IsNullOrEmpty(userProfileId))
             {
-                return BadRequest("Invalid user profile Id");
+                return BadRequest("Failed to create account");
             }
+
             try
             {
                 var created = await _financeService.CreateFinancialAccount(userProfileId, financialAccountVM);
