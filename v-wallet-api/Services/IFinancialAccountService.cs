@@ -13,7 +13,7 @@ namespace v_wallet_api.Services
         Task<FinancialAccountViewModel?> GetFinancialAccountByAccountId(string financialAccountId);
         Task<string> CreateFinancialAccount(string userProfileId, FinancialAccountViewModel financialAccount);
         Task UpdateFinancialAccount(string userProfileId, FinancialAccountViewModel financialAccount);
-        Task DeleteFinancialAccount(string userProfileId, string id);
+        Task DeleteFinancialAccount(string id);
 
     }
 }

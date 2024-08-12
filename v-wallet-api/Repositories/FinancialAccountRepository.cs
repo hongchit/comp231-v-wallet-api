@@ -110,5 +110,11 @@ namespace v_wallet_api.Repositories
             _context.FinancialAccount.Remove(account);
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeleteFinancialTransaction(IEnumerable<FinancialTransaction> transactions)
+        {
+            _context.FinancialTransaction.RemoveRange(transactions);
+            await _context.SaveChangesAsync();
+        }
     }
 }

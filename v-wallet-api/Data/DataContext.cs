@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.VisualBasic;
 using v_wallet_api.Models;
 
 namespace v_wallet_api.Data
@@ -9,7 +8,6 @@ namespace v_wallet_api.Data
     {
         public DataContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
-
         }
 
         public DbSet<Account> Account { get; set; }
@@ -40,8 +38,6 @@ namespace v_wallet_api.Data
 
             modelBuilder.Entity<Category>().ToTable("tbl_Category");
             modelBuilder.Entity<Currency>().ToTable("tbl_Currency");
-
-
         }
     }
 }

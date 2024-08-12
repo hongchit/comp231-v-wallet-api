@@ -1,6 +1,4 @@
-﻿using System.Web.Http;
-using Microsoft.AspNetCore.Mvc;
-using v_wallet_api.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using v_wallet_api.Providers;
 using v_wallet_api.Services;
 using v_wallet_api.ViewModels;
@@ -127,20 +125,16 @@ namespace v_wallet_api.Controllers
             }
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpDelete("{userProfileId}/account/{financialAccountId}")]
-        public async Task<IActionResult> DeleteFinancialAccount(string userProfileId, string financialAccountId)
+        [Microsoft.AspNetCore.Mvc.HttpDelete("account/{financialAccountId}")]
+        public async Task<IActionResult> DeleteFinancialAccount(string financialAccountId)
         {
-            if (string.IsNullOrEmpty(userProfileId))
-            {
-                return BadRequest("Invalid user profile Id");
-            }
             if (string.IsNullOrEmpty(financialAccountId))
             {
                 return BadRequest("Invalid financial account Id");
             }
             try
             {
-                await _financeService.DeleteFinancialAccount(userProfileId, financialAccountId);
+                await _financeService.DeleteFinancialAccount(financialAccountId);
                 return Ok();
             }
             catch (KeyNotFoundException ex)

@@ -13,5 +13,7 @@ namespace v_wallet_api.Repositories
         Task<FinancialAccount> CreateFinancialAccount(FinancialAccount account);
         Task UpdateFinancialAccount(FinancialAccount account);
         Task DeleteFinancialAccount(FinancialAccount account);
+
+        Task DeleteFinancialTransaction(IEnumerable<FinancialTransaction> transactions);
     }
 }

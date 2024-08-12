@@ -13,10 +13,10 @@ namespace v_wallet_api.Repositories
             _context = dataContext;
         }
 
-        public async Task<List<Currency>> GetALlCurrencies()
+        public async Task<List<Currency>> GetAllCurrencies()
         {
-            var curriencies = await _context.Currency.ToListAsync();
-            return curriencies;
+            var currencies = await _context.Currency.ToListAsync();
+            return currencies;
         }
     }
 }
