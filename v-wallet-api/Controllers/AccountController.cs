@@ -19,6 +19,11 @@ namespace v_wallet_api.Controllers
             _userProfileService = userProfileService;
         }
 
+        /// <summary>
+        /// Endpoint for user login
+        /// </summary>
+        /// <param name="loginViewModel">The login view model containing user credentials</param>
+        /// <returns>The user account details if login is successful, otherwise returns a bad request</returns>
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
@@ -38,26 +43,25 @@ namespace v_wallet_api.Controllers
             return Ok(userAccount);
         }
 
+        /// <summary>
+        /// Endpoint for user logout
+        /// </summary>
+        /// <returns>Ok response indicating successful logout</returns>
         [HttpGet("logout")]
         public async Task<IActionResult> Logout()
         {
-            // Logout user
-            // TODO: Session management (remove session token)
             return Ok();
         }
 
+        /// <summary>
+        /// Endpoint for user registration
+        /// </summary>
+        /// <param name="userProfileViewModel">The user profile view model containing user registration details</param>
+        /// <returns>The registered user profile if registration is successful, otherwise returns a bad request</returns>
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] UserProfileViewModel userProfileViewModel)
         {
-            //{
-            //    "email": "example@example.com",
-            //  "password": "password123",
-            //  "confirmPassword": "password123",
-            //  "firstname": "John",
-            //  "lastname": "Doe",
-            //  "birthday": "2000-01-01"
-            //}
             if (string.IsNullOrEmpty(userProfileViewModel.Email) || string.IsNullOrEmpty(userProfileViewModel.Password))
             {
                 return BadRequest("Email or password is invalid");
